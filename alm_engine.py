@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 
 # Granular ALM Parameters (Initial Yield/Cost and Pass-Through Betas)
 ALM_PARAMS = {
-    # --- ASSETS ---
-    'CHBAL':    {'yield': 0.0025, 'beta': 1.00},  # Cash & Fed balances (100% rate-sensitive)
+    # ASSETS 
+    'CHBAL':    {'yield': 0.0025, 'beta': 1.00},  # Cash & Fed balances 
     'SCAF':     {'yield': 0.0160, 'beta': 0.30},  # Available-for-Sale (AFS) securities
     'SCHA':     {'yield': 0.0185, 'beta': 0.10},  # Held-to-Maturity (HTM) securities (long duration)
     'LNRERES':  {'yield': 0.0290, 'beta': 0.10},  # 1-4 Family residential mortgages (mostly fixed-rate)
     'LNREMULT': {'yield': 0.0320, 'beta': 0.25},  # Multifamily real estate mortgages
     'LNOTHER':  {'yield': 0.0350, 'beta': 0.65},  # Other loans / HNW credit lines (mostly floating)
 
-    # --- LIABILITIES ---
+    #  LIABILITIES 
     'DEPNI':    {'cost': 0.0000, 'beta': 0.00},   # Noninterest-bearing deposits (0% rate, high run hazard)
     'DEPINT':   {'cost': 0.0020, 'beta': 0.75},   # Interest-bearing demand / MMDA deposits
     'NTRTIME':  {'cost': 0.0120, 'beta': 0.50},   # Time deposits / Certificates of Deposit (CDs)
@@ -22,14 +22,14 @@ ALM_PARAMS = {
 
 
 # -----------------------------------------------------------------------------------------
-# 1. LOAD BALANCE SHEET FROM CALL REPORT CSV
+#  LOAD BALANCE SHEET FROM CALL REPORT CSV
 # -----------------------------------------------------------------------------------------
-def load_balance_sheet_from_csv(filepath: str = 'simulazione_ottima.csv', date_col_idx: int = 8) -> dict:
+def load_balance_sheet_from_csv(filepath: str = 'balance_sheet.csv', date_col_idx: int = 8) -> dict:
     """
     Parses the FRB FDIC Call Report CSV and extracts balance sheet items in $ Millions
     for the specified column (e.g., date_col_idx=2 -> Q4 2021 Status Quo; date_col_idx=8 -> Pro-Forma Hedged).
     """
-    # Smart fallback: checks current directory first, then 'data/' folder
+   
     if not os.path.exists(filepath) and os.path.exists(os.path.join('data', filepath)):
         filepath = os.path.join('data', filepath)
 
@@ -52,8 +52,9 @@ def load_balance_sheet_from_csv(filepath: str = 'simulazione_ottima.csv', date_c
 
 
 # -----------------------------------------------------------------------------------------
-# 2. CIR INTEREST RATE SIMULATION WITH JUMP-DIFFUSION (FOMC RATE HIKES)
-# -----------------------------------------------------------------------------------------
+#  CIR INTEREST RATE SIMULATION WITH JUMP-DIFFUSION 
+# ----------------------------------------------------------------------------------------
+
 def simulate_cir_and_plot(
     r0: float = 0.0025,
     a: float = 0.50,
@@ -109,7 +110,7 @@ def simulate_cir_and_plot(
 
 
 # -----------------------------------------------------------------------------------------
-# 3. VECTORIZED DYNAMIC NII, CET1 RATIO & LCR ENGINE
+#  VECTORIZED DYNAMIC NII, CET1 RATIO & LCR ENGINE
 # -----------------------------------------------------------------------------------------
 def simulate_alm_dynamics(
     rates_matrix: np.ndarray,
@@ -139,7 +140,7 @@ def simulate_alm_dynamics(
     uninsured_dep_init = bs_dict.get('DEPUNINS', 116696.7)
     insured_dep_init = bs_dict.get('DEPINS', 40617.4)
 
-    # Risk-Weighted Assets (RWA) calibrated to FRB Call Report (including off-balance sheet commitments -> ~9.7% CET1 at t=0)
+    # Risk-Weighted Assets (RWA) calibrated to FRB Call Report 
     rwa = (0.50 * res_mortgages + 1.00 * other_loans + 0.20 * securities_amount) * 1.64
 
     n_sims, steps = rates_matrix.shape
@@ -152,7 +153,6 @@ def simulate_alm_dynamics(
     curr_uninsured = np.full(n_sims, uninsured_dep_init, dtype=float)
     cum_nii = np.zeros(n_sims, dtype=float)
 
-    # Check if granular Call Report sub-items are available to apply ALM_PARAMS
     granular_assets = ['SCAF', 'SCHA', 'LNRERES', 'LNREMULT', 'LNOTHER']
     granular_liabs = ['DEPNI', 'DEPINT', 'NTRTIME', 'OTHBRF']
     use_granular = all(k in bs_dict for k in granular_assets + granular_liabs)
@@ -161,13 +161,13 @@ def simulate_alm_dynamics(
         r_t = rates_matrix[:, t]
         delta_r = np.maximum(0.0, r_t - r0)
 
-        # 1. Endogenous Uninsured Deposit Outflow (Bank Run trigger when Fed Funds Rate > 3.5%)
+        # Endogenous Uninsured Deposit Outflow (Bank Run trigger when Fed Funds Rate > 3.5%)
         run_rate = np.where(r_t > 0.035, 0.04, 0.005)
         outflow = curr_uninsured * run_rate
         curr_uninsured = np.maximum(0.0, curr_uninsured - outflow)
         current_cash = np.maximum(0.0, current_cash - outflow)
 
-        # 2. Interest Income & Expense (Granular via ALM_PARAMS or Aggregated Fallback)
+        # Interest Income & Expense (Granular via ALM_PARAMS or Aggregated Fallback)
         if use_granular:
             ia_earning_assets = sum(
                 bs_dict[k] * (ALM_PARAMS[k]['yield'] + ALM_PARAMS[k]['beta'] * delta_r)
@@ -195,10 +195,10 @@ def simulate_alm_dynamics(
         # Update Liquidity Buffer
         current_cash = np.maximum(0.0, current_cash + nii_t)
 
-        # 3. Dynamic CET1 Ratio (%)
+        # Dynamic CET1 Ratio (%)
         cet1_matrix[:, t] = ((initial_equity + cum_nii) / rwa) * 100.0
 
-        # 4. Dynamic Liquidity Coverage Ratio (LCR %) - HQLA / 30-Day Net Cash Outflows
+        # Dynamic Liquidity Coverage Ratio (LCR %) - HQLA / 30-Day Net Cash Outflows
         hqla = current_cash + 0.85 * securities_amount
         net_outflows_30d = 0.40 * curr_uninsured + 0.05 * insured_dep_init
         lcr_matrix[:, t] = (hqla / net_outflows_30d) * 100.0
@@ -234,7 +234,7 @@ def simulate_alm_dynamics(
 
 
 # -----------------------------------------------------------------------------------------
-# 4. NII DISTRIBUTION HISTOGRAM & 95% VaR THRESHOLD
+#  NII DISTRIBUTION HISTOGRAM & 95% VaR THRESHOLD
 # -----------------------------------------------------------------------------------------
 def plot_nii_histogram(
     nii_matrix: np.ndarray,
@@ -284,7 +284,7 @@ def plot_nii_histogram(
 
 
 # -----------------------------------------------------------------------------------------
-# 5. ECONOMIC VALUE OF EQUITY (EVE) & DURATION GAP DISTRIBUTION
+# ECONOMIC VALUE OF EQUITY (EVE) & DURATION GAP DISTRIBUTION
 # -----------------------------------------------------------------------------------------
 def calculate_and_plot_eve(
     rates_matrix: np.ndarray,
@@ -353,7 +353,7 @@ def calculate_and_plot_eve(
 
 
 # -----------------------------------------------------------------------------------------
-# 6. ALCO HEDGING SENSITIVITY ANALYSIS (IRS NOTIONAL OPTIMIZATION FOR CFO)
+#  ALCO HEDGING SENSITIVITY ANALYSIS (IRS NOTIONAL OPTIMIZATION FOR CFO)
 # -----------------------------------------------------------------------------------------
 def run_irs_sensitivity_analysis(
     rates_matrix: np.ndarray,
@@ -415,7 +415,7 @@ def run_irs_sensitivity_analysis(
 
 
 # -----------------------------------------------------------------------------------------
-# 7. EXECUTIVE SUMMARY TABLES & CSV EXPORT
+# EXECUTIVE SUMMARY TABLES & CSV EXPORT
 # -----------------------------------------------------------------------------------------
 def print_simulation_summary(rates_matrix, nii_matrix, cet1_matrix=None, lcr_matrix=None, months=None) -> pd.DataFrame:
     if months is None:

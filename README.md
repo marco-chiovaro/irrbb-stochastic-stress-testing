@@ -38,6 +38,16 @@ The engine is validated on First Republic Bank's balance sheet evolution (`simul
 | :---: | :---: |
 | ![NII Distribution](results/baseline/4_nii_histogram.png) | ![EVE Distribution](results/baseline/5_eve_distribution.png) |
 
+#### Quantitative Stress-Test Summary (Unhedged Baseline — $N = 100,000$ Paths)
+
+| Horizon | Mean Fed Rate (P95) | Mean NII (VaR 95%) | Prob. $\text{NII} \le 0$ | Mean EVE (VaR 95%) | $\Delta\text{EVE}$ | Insolvency Risk ($\text{EVE} \le 0$) | Mean CET1 | Mean LCR (Breach Prob.) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **t = 6m** | 2.56% (3.56%) | $171.2M ($76.8M) | 0.3% | -$4.37B (-$13.68B) | -$20.27B | 78.8% | 10.65% | 69.3% (100.0%) |
+| **t = 12m** | 3.60% (5.40%) | $56.3M (-$124.8M) | 28.7% | -$14.20B (-$31.17B) | -$30.10B | 94.6% | 11.00% | 59.3% (100.0%) |
+| **t = 18m** | 3.75% (6.00%) | $37.2M (-$183.0M) | 35.6% | -$15.59B (-$36.88B) | -$31.49B | 92.2% | 11.16% | 62.9% (100.0%) |
+| **t = 24m** | 3.86% (6.38%) | $24.6M (-$219.5M) | 39.1% | -$16.64B (-$40.46B) | -$32.54B | 91.6% | 11.26% | 70.7% (100.0%) |
+
+> **Key Takeaway — The IRRBB & Liquidity Paradox:** At $t = 12\text{m}$, accounting metrics still mask the underlying fragility: expected monthly NII remains positive ($56.3M, positive in **71.3%** of paths) and book CET1 stands at **11.00%**. However, on a mark-to-market basis, the severe duration mismatch erodes **-$30.10B** of economic value, pushing **94.6%** of simulated scenarios into economic insolvency ($\text{EVE} \le 0$) while the **LCR** remains structurally below the 100% regulatory minimum (**59.3%**) across 100% of paths.
 ---
 
 ## Project Architecture & Quickstart

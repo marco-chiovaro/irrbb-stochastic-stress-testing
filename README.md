@@ -22,15 +22,19 @@ For each Monte Carlo simulation path $i = 1, \dots, N$ (default $N = 100,000$) o
 4. **Economic Value of Equity (`calculate_and_plot_eve`)**  
    Computes the cross-sectional distribution of $\text{EVE}_{i,T}$ by discounting asset and liability duration gaps ($D_A \approx 7.0\text{ yrs}$ vs. $D_L \approx 0.7\text{ yrs}$), net of the duration offset provided by the IRS hedge.
 
+#### Stochastic Rate Scenario Generation (CIR Jump-Diffusion)
+
+![Fed Funds Rate Monte Carlo Simulation](starting_scenario/1_rates_spaghetti_plot.png)
+
 ---
 
 ## Empirical Validation: First Republic Bank (FRB)
 
 The engine is validated on First Republic Bank's balance sheet evolution (`simulazione_ottima.csv`), bridging historical regulatory reporting with management's pro-forma restructuring across sequential time snapshots:
 
-* **Historical Baseline (`COL_IDX = 2`, `IRS_NOTIONAL = 0.0` — Q4 2021 FDIC Call Report):** Captures First Republic Bank's pre-crisis structure ($181.09B total assets, $79.21B fixed-rate 1–4 family mortgages, and $116.70B uninsured deposits). Illustrates the *IRRBB Paradox*—short-term NII remains positive in **85.6%** of scenarios at 12 months due to sticky deposit repricing, while **95.5%** of paths result in economic capital insolvency ($\text{EVE} \le 0$).
-* **Interim Trajectory (`COL_IDX = 3..7`):** Sequential month-by-month evolution of balance sheet items under rising interest rates.
-* **Pro-Forma Hedged Restructuring (`COL_IDX = 8`, `IRS_NOTIONAL = 70000.0`):** Target balance sheet engineered by the CEO/ALCO team combined with a **$70B Pay-Fixed IRS** overlay to neutralize duration mismatch, reinforce liquidity buffers, and prevent deposit flight.
+- **Historical Baseline (`COL_IDX = 2`, `IRS_NOTIONAL = 0.0` — Q4 2021 FDIC Call Report):** Captures First Republic Bank's pre-crisis structure ($181.09B total assets, $79.21B fixed-rate 1–4 family mortgages, and $116.70B uninsured deposits). Illustrates the *IRRBB Paradox*—short-term NII remains positive in **71.3%** of scenarios at 12 months due to sticky deposit repricing, while **94.6%** of paths result in economic capital insolvency ($\text{EVE} \le 0$).
+- **Interim Trajectory (`COL_IDX = 3..7`):** Sequential month-by-month evolution of balance sheet items under rising interest rates.
+- **Pro-Forma Hedged Restructuring (`COL_IDX = 8`, `IRS_NOTIONAL = 70000.0`):** Target balance sheet engineered by the CEO/ALCO team combined with a **$70B Pay-Fixed IRS** overlay to neutralize duration mismatch, reinforce liquidity buffers, and prevent deposit flight.
 
 ### Stress Test Results (12-Month Horizon — Unhedged Baseline)
 
@@ -48,13 +52,9 @@ The engine is validated on First Republic Bank's balance sheet evolution (`simul
 | **t = 24m** | 3.86% (6.38%) | $24.6M (-$219.5M) | 39.1% | -$16.64B (-$40.46B) | -$32.54B | 91.6% | 11.26% | 70.7% (100.0%) |
 
 > **Key Takeaway — The IRRBB & Liquidity Paradox:** At $t = 12\text{m}$, accounting metrics still mask the underlying fragility: expected monthly NII remains positive ($56.3M, positive in **71.3%** of paths) and book CET1 stands at **11.00%**. However, on a mark-to-market basis, the severe duration mismatch erodes **-$30.10B** of economic value, pushing **94.6%** of simulated scenarios into economic insolvency ($\text{EVE} \le 0$) while the **LCR** remains structurally below the 100% regulatory minimum (**59.3%**) across 100% of paths.
----
 
-## Project Architecture & Quickstart
+### Pro-Forma Hedged Restructuring (12-Month Horizon — $70B IRS Overlay)
 
-```text
-├── alm_engine.py          # Vectorized CIR engine, NII/EVE/CET1/LCR calculators & plotting
-├── main.py                # Scenario configuration and execution script
-├── simulazione_ottima.csv # FDIC Call Report historical & pro-forma snapshots
-├── results/               # Generated plots and executive summary CSVs
-└── requirements.txt       # Python dependencies
+To neutralize the duration mismatch and prevent deposit flight, the restructuring plan combines balance sheet rebalancing (expanding cash/HQLA buffers and reducing reliance on runnable uninsured funding) with a **$70B Pay-Fixed / Receive-Floating Interest Rate Swap** overlay:
+
+| Post-Hedge Earnings: 12-Month NII Distribution | Post-Hedge Capital: 12-Month EVE Distribution

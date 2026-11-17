@@ -36,7 +36,7 @@ The engine is validated on First Republic Bank's balance sheet evolution (`simul
 
 | Earnings View: 12-Month NII Distribution | Economic Value View: 12-Month EVE Distribution |
 | :---: | :---: |
-| ![NII Distribution](results/baseline/4_nii_histogram.png) | ![EVE Distribution](results/baseline/5_eve_distribution.png) |
+| ![NII Distribution](results/starting_scenario/4_nii_histogram.png) | ![EVE Distribution](results/starting_scenario/5_eve_distribution.png) |
 
 #### Quantitative Stress-Test Summary (Unhedged Baseline — $N = 100,000$ Paths)
 

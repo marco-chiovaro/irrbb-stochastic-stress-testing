@@ -1,0 +1,29 @@
+Call Report data (source F5),,,,,,,,
+"Figures from the quarterly reports First Republic filed with its regulators, as published by the FDIC. $ thousands. 'Field' is the code used by the FDIC.   ----> it's a mandatory thing that every bank has to sent to the FDIC and we use this to analyze the fair value and the deposits;;;",,,,,,,,
+,,,,,,,,
+Field,Description,31 Dec 2021,31 Mar 2022,30 Jun 2022,30 Sep 2022,31 Dec 2022,,Hedged BS 31 Dec 2021
+ASSET,Total assets,"181,087,209","187,120,925","197,908,327","205,108,685","212,638,872","","198,187,209"
+CHBAL,Cash & due from depository institutions,"12,947,107","7,756,054","6,236,702","5,532,016","4,283,201","","60,047,107"
+SC,"Securities, total","25,701,247","30,301,952","31,171,225","31,617,021","31,718,821","","25,701,247"
+SCAA,AFS at amortised cost,"3,425,222","3,640,187","3,760,958","3,826,518","3,816,695","","3,425,222"
+SCAF,AFS at fair value,"3,380,776","3,445,788","3,437,727","3,348,040","3,346,697","","3,380,776"
+SCHA,HTM at amortised cost,"22,301,305","26,840,666","27,720,629","28,257,648","28,358,907","","22,301,305"
+SCHF,HTM at fair value,"23,421,945","25,260,979","24,079,768","22,675,848","23,587,503","","23,421,945"
+LNLSGR,"Loans and leases, gross","134,956,977","141,312,904","151,519,016","158,767,169","166,867,300","","104,956,977"
+LNATRES,Allowance for loan losses,"693,649","700,668","728,926","759,975","783,633","","693,649"
+LNRERES,Real estate 1-4 family (residential mortgages),"79,212,563","84,228,466","91,800,332","96,954,632","101,347,088","","49,212,563"
+LNREMULT,Real estate multifamily,"15,965,439","16,953,026","18,346,166","20,363,982","21,587,848","","15,965,439"
+DEP,Total deposits,"156,321,243","162,059,675","165,647,106","172,382,443","176,436,706","","156,321,243"
+DEPNI,Noninterest-bearing deposits,"70,840,232","72,424,494","75,208,395","69,931,102","62,578,485","","40,840,232"
+NTRTIME,"Time deposits, total","7,356,444","7,041,390","6,987,437","15,931,751","25,211,730","","37,356,444"
+DEPINS,Estimated insured deposits,"40,617,353","43,586,864","46,609,593","54,048,308","57,663,686","","70,617,353"
+DEPUNINS,Estimated uninsured deposits,"116,696,693","119,290,579","119,808,137","119,147,067","119,470,758","","86,696,693"
+OTHBFHLB,FHLB advances,"3,700,000","3,700,000","11,000,000","11,000,000","14,000,000","","18,700,000"
+OTHBRF,Other borrowed funds (incl. Fed and FHLB),"4,698,254","4,698,789","11,499,262","11,499,560","14,499,860","","19,698,254"
+LIAB,Total liabilities,"165,189,589","170,966,501","181,482,655","187,989,517","195,192,945","","180,189,589"
+EQTOT,Total equity capital,"15,897,620","16,154,424","16,425,672","17,119,168","17,445,927","","17,997,620"
+,,,,,,,,
+Check: Call Report totals minus balance sheet totals in 01_Balance_Sheets ($ millions; +/-1 = rounding),,,,,,,,
+ASSET,Total assets,-,-,n/a,-,-,-,"184,720,925"
+DEP,Total deposits,-,-,n/a,-,-,-,"162,059,675"
+EQTOT,Total equity,-,-,n/a,-,-,-,"13,754,424"

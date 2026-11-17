@@ -57,4 +57,31 @@ The engine is validated on First Republic Bank's balance sheet evolution (`simul
 
 To neutralize the duration mismatch and prevent deposit flight, the restructuring plan combines balance sheet rebalancing (expanding cash/HQLA buffers and reducing reliance on runnable uninsured funding) with a **$70B Pay-Fixed / Receive-Floating Interest Rate Swap** overlay:
 
-| Post-Hedge Earnings: 12-Month NII Distribution | Post-Hedge Capital: 12-Month EVE Distribution
+| Post-Hedge Earnings: 12-Month NII Distribution | Post-Hedge Capital: 12-Month EVE Distribution |
+| :---: | :---: |
+| ![Hedged NII Distribution](hedged_scenario/4_nii_histogram_hedged.png) | ![Hedged EVE Distribution](hedged_scenario/5_eve_distribution_hedged.png) |
+
+#### Quantitative Comparison: Unhedged Baseline vs. Pro-Forma Hedged ($t = 12\text{m}$)
+
+| Metric ($t = 12\text{m}$ Stress Horizon) | Unhedged Baseline (`COL_IDX = 2`) | Pro-Forma Hedged (`COL_IDX = 8`, $70B IRS) | Net Risk Reduction / Impact |
+| :--- | :---: | :---: | :---: |
+| **Mean Monthly NII (VaR 95%)** | $56.3M (-$124.8M) | **$198.6M ($155.2M)** | **+$142.3M (+$280.0M tail)** |
+| **Prob. of NII Loss ($\text{NII} \le 0$)** | 28.7% | **0.0%** | **-28.7 pp (Eliminated)** |
+| **Mean EVE (VaR 95%)** | -$14.20B (-$31.17B) | **$9.42B ($4.58B)** | **+$23.62B (+$35.75B tail)** |
+| **Capital Insolvency Risk ($\text{EVE} \le 0$)** | 94.6% | **0.2%** | **-94.4 pp (Neutralized)** |
+| **Mean CET1 Ratio** | 11.00% | **14.68%** | **+368 bps** |
+| **Mean LCR (Breach Prob. < 100%)** | 59.3% (100.0%) | **217.1% (0.0%)** | **+157.8 pp (Compliant)** |
+
+> **ALM Desk Conclusion:** Combining balance sheet liquidity rebalancing with a $70B Pay-Fixed IRS overlay resolves the IRRBB trade-off: economic capital insolvency risk at $t = 12\text{m}$ drops from **94.6% to 0.2%**, monthly NII remains positive across **100%** of simulated rate paths, and LCR stays comfortably above the 100% regulatory threshold (**217.1%**).
+
+---
+
+## Project Architecture & Quickstart
+
+```text
+├── alm_engine.py          # Vectorized CIR engine, NII/EVE/CET1/LCR calculators & plotting
+├── main.py                # Scenario configuration and execution script
+├── balance_sheet.csv # FDIC Call Report historical & pro-forma snapshots
+├── starting_scenario/     # Baseline (COL_IDX=2, Unhedged) plots & executive summary CSV
+├── hedged_scenario/       # Pro-forma (COL_IDX=8, $70B IRS) plots & executive summary CSV
+└── requirements.txt       # Python dependencies

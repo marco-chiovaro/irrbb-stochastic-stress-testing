@@ -76,7 +76,7 @@ To neutralize the duration mismatch and prevent deposit flight, the restructurin
 
 ---
 
-## Project Architecture & Quickstart
+## Project Architecture
 
 ```text
 ├── alm_engine.py          # Vectorized CIR engine, NII/EVE/CET1/LCR calculators & plotting

@@ -34,7 +34,7 @@ The engine is validated on First Republic Bank's balance sheet evolution (`simul
 
 - **Historical Baseline (`COL_IDX = 2`, `IRS_NOTIONAL = 0.0` — Q4 2021 FDIC Call Report):** Captures First Republic Bank's pre-crisis structure ($181.09B total assets, $79.21B fixed-rate 1–4 family mortgages, and $116.70B uninsured deposits). Illustrates the *IRRBB Paradox*—short-term NII remains positive in **71.3%** of scenarios at 12 months due to sticky deposit repricing, while **94.6%** of paths result in economic capital insolvency ($\text{EVE} \le 0$).
 - **Interim Trajectory (`COL_IDX = 3..7`):** Sequential month-by-month evolution of balance sheet items under rising interest rates.
-- **Pro-Forma Hedged Restructuring (`COL_IDX = 8`, `IRS_NOTIONAL = 70000.0`):**Target balance sheet after liquidity rebalancing and funding restructuring, hedged with a $70B Pay-Fixed IRS against rate hikes.
+- **Pro-Forma Hedged Restructuring (`COL_IDX = 8`, `IRS_NOTIONAL = 70000.0`):** Target balance sheet after liquidity rebalancing and funding restructuring, hedged with a $70B Pay-Fixed IRS against rate hikes.
 
 ### Stress Test Results (12-Month Horizon — Unhedged Baseline)
 

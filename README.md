@@ -14,7 +14,7 @@ For each Monte Carlo simulation path $i = 1, \dots, N$ (default $N = 100,000$) o
 2. **Stochastic Rate Engine (`simulate_cir_and_plot`)**  
    Generates the $i$-th Fed Funds rate trajectory $r_{i,t}$ using a **Cox-Ingersoll-Ross (CIR)** mean-reverting process augmented with **Jump-Diffusion** shocks calibrated to discrete FOMC tightening steps ($r_0 = 0.25\%$, $\bar{r} = 4.25\%$, $a = 0.50$, $\sigma = 8\%$):
    $$dr_{i,t} = a(\bar{r} - r_{i,t})dt + \sigma\sqrt{r_{i,t}}\,dW_{i,t} + J_{i,t}$$
-3. **Dynamic Earnings, Solvency & Liquidity (`calculate_nii`)**  
+3. **Dynamic Earnings, Solvency & Liquidity (`simulate_alm_dynamics`)**  
    Maps each rate path $r_{i,t}$ into balance sheet cash flows using granular asset/liability pass-through betas (`ALM_PARAMS`) and an endogenous **uninsured deposit run trigger** when rates breach the $3.5\%$ threshold[cite: 6, 14]:
    * **Monthly Net Interest Income ($\text{NII}_{i,t}$):** Interest income on loans, securities, and cash reserves plus Pay-Fixed/Receive-Floating Interest Rate Swap (IRS) net cash flows, minus funding costs[cite: 14].
    * **Dynamic Solvency ($\text{CET1}_{i,t}$):** Tracks cumulative retained earnings/losses against Risk-Weighted Assets (RWA) calibrated to the Call Report.
